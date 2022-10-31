@@ -24,4 +24,19 @@ const userController = {
             .then((user) => res.json(user))
             .catch((error) => res.status(500).json(error.msg));
     },
+    // update user
+    updateUser(req, res) {
+        User.findOneAndUpdate(
+            { _id: req.params.userId },
+            { $set: req.body },
+            { runValidators: true, new: true }
+        )
+            .then((user) =>
+                !User
+                    ? res.status(404).json({ message: 'User ID does not exist.' })
+                    : res.json(user)
+            )
+            .catch((error) => res.status(500).json(error));
+    },
+
 }
