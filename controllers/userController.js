@@ -43,7 +43,7 @@ module.exports = {
         User.findByIdAndDelete({ _id: req.params.userId })
             .then((user) =>
                 !user
-                    ? res.status(404).json({ message: 'User ID does not exist' })
+                    ? res.status(404).json({ message: 'User ID does not exist.' })
                     : Thought.deleteMany({ _id: { $in: user.thoughts } })
             )
             .then(() => res.json({ message: 'User successfully deleted' }))
@@ -58,11 +58,27 @@ module.exports = {
         )
             .then(friend => {
                 if (!friend) {
-                    res.status(404).json({ message: 'User ID does not exist!' });
+                    res.status(404).json({ message: 'User ID does not exist.' });
                     return;
                 }
                 res.json(friend);
             })
             .catch((error) => res.status(500).json(error));
     },
-}
+    // remove friend from user by id
+    removeFriend({ params }, res) {
+        User.findOneAndUpdate(
+            { _id: params.userId },
+            { $pull: { friends: params.friendId } },
+            { new: true, runValidators: true }
+        )
+            .then(friend => {
+                if (!friend) {
+                    res.status(404).json({ message: 'User ID does not exist.' });
+                    return;
+                }
+                res.json(friend);
+            })
+            .catch((error) => res.status(500).json(error));
+    }
+};
