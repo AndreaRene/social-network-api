@@ -16,3 +16,10 @@ router
     .get(getAllUsers)
     .post(createUser)
 
+// prep GET, PUT, and DELETE by ID /api/users/:id
+router
+    .route('/:id')
+    .get(getUserById)
+    .put(updateUser)
+    .delete(deleteUser);
+
