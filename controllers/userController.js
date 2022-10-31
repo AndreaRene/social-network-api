@@ -1,6 +1,6 @@
 const { User, Thought } = require('../models');
 
-const userController = {
+module.exports = {
     // get all users
     getAllUsers(req, res) {
         User.find({})
@@ -38,7 +38,7 @@ const userController = {
             )
             .catch((error) => res.status(500).json(error));
     },
-    // delete user by id
+    // delete user by id(delete user thoughts)
     deleteUser(req, res) {
         User.findByIdAndDelete({ _id: req.params.userId })
             .then((user) =>
@@ -47,6 +47,22 @@ const userController = {
                     : Thought.deleteMany({ _id: { $in: user.thoughts } })
             )
             .then(() => res.json({ message: 'User successfully deleted' }))
+            .catch((error) => res.status(500).json(error));
+    },
+    // add friend to user by id
+    addFriend({ params }, res) {
+        User.findOneAndUpdate(
+            { _id: params.userId },
+            { $push: { friends: params.friendId } },
+            { new: true, runValidators: true }
+        )
+            .then(friend => {
+                if (!friend) {
+                    res.status(404).json({ message: 'User ID does not exist!' });
+                    return;
+                }
+                res.json(friend);
+            })
             .catch((error) => res.status(500).json(error));
     },
 }
