@@ -8,7 +8,6 @@ const thoughtSchema = new Schema(
             required: true,
             max_length: 280,
         },
-        //ASK BCS getter method to format the timestamp on query
         createdAt: {
             type: Date,
             default: Date.now,
@@ -24,6 +23,7 @@ const thoughtSchema = new Schema(
             getters: true,
             virtuals: true,
         },
+        id: false,
     }
 );
 
