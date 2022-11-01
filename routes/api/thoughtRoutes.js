@@ -14,4 +14,11 @@ const {
 router
     .route('/')
     .get(getAllThoughts)
-    .post(createThought)
+    .post(newThought)
+
+// prep GET, PUT, and DELETE by ID /api/thoughts/:id
+router
+    .route('/:id')
+    .get(getThoughtById)
+    .put(updateThought)
+    .delete(deleteThought);
