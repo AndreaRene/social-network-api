@@ -68,5 +68,17 @@ module.exports = {
             )
             .catch((error) => res.status(500).json(error));
     },
-
+    //create new reaction
+    newReaction({ params, body }, res) {
+        Thought.findOneAndUpdate(
+            { _id: params.thoughtId },
+            { $addToSet: { reactions: body } },
+            { runValidators: true, new: true }
+        )
+            .then((thought) =>
+                !thought
+                    ? res.status(404).json({ message: "Thought ID does not exist." })
+                    : res.json(thought))
+            .catch((error) => res.status(500).json(error));
+    },
 }
