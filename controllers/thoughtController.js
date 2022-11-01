@@ -49,4 +49,24 @@ module.exports = {
             )
             .catch((error) => res.status(500).json(error));
     },
+    // delete thought by id
+    deleteThought(req, res) {
+        Thought.findOneAndDelete({ _id: req.params.thoughtId })
+            .then((thought) =>
+                !thought
+                    ? res.status(404).json({ message: 'Thought ID does not exist.' })
+                    : User.findOneAndUpdate(
+                        { thoughts: req.params.thoughtId },
+                        { $pull: { thoughts: req.params.thoughtId } },
+                        { new: true }
+                    )
+            )
+            .then((user) =>
+                !user
+                    ? res.status(404).json({ message: 'User ID does not exist. Thought deleted.' })
+                    : res.json({ message: 'Thought successfully deleted' })
+            )
+            .catch((error) => res.status(500).json(error));
+    },
+
 }
