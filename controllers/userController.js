@@ -32,7 +32,7 @@ module.exports = {
             { runValidators: true, new: true }
         )
             .then((user) =>
-                !User
+                !user
                     ? res.status(404).json({ message: 'User ID does not exist.' })
                     : res.json(user)
             )

@@ -21,7 +21,32 @@ module.exports = {
     // create new thought
     newThought(req, res) {
         Thought.create(req.body)
-            .then((thought) => res.json(thought))
-            .catch((error) => res.status(500).json(error.msg));
+            .then((thoughts) => {
+                return User.findOneAndUpdate(
+                    { _id: req.body.userId },
+                    { $addToSet: { thoughts: thoughts._id } },
+                    { new: true }
+                );
+            })
+            .then((user) =>
+                !user
+                    ? res.status(404).json({ message: 'User ID does not exist. Thought created without user data.' })
+                    : res.json('Thought created')
+            )
+            .catch((error) => res.status(500).json(error));
+    },
+    // update thought by id
+    updateThought(req, res) {
+        Thought.findOneAndUpdate(
+            { _id: req.params.thoughtId },
+            { $set: req.body },
+            { runValidators: true, new: true }
+        )
+            .then((thought) =>
+                !thought
+                    ? res.status(404).json({ message: 'Thought ID does not exist.' })
+                    : res.json(thought)
+            )
+            .catch((error) => res.status(500).json(error));
     },
 }
