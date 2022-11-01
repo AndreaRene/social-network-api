@@ -56,13 +56,10 @@ module.exports = {
             { $push: { friends: params.friendId } },
             { new: true, runValidators: true }
         )
-            .then(friend => {
-                if (!friend) {
-                    res.status(404).json({ message: 'User ID does not exist.' });
-                    return;
-                }
-                res.json(friend);
-            })
+            .then((friend) =>
+                !friend
+                    ? res.status(404).json({ message: 'User ID does not exist.' })
+                    : res.json(friend))
             .catch((error) => res.status(500).json(error));
     },
     // remove friend from user by id
@@ -72,13 +69,10 @@ module.exports = {
             { $pull: { friends: params.friendId } },
             { new: true, runValidators: true }
         )
-            .then(friend => {
-                if (!friend) {
-                    res.status(404).json({ message: 'User ID does not exist.' });
-                    return;
-                }
-                res.json(friend);
-            })
+            .then(friend =>
+                !friend
+                    ? res.status(404).json({ message: 'User ID does not exist.' })
+                    : res.json(friend))
             .catch((error) => res.status(500).json(error));
     }
 };
