@@ -69,10 +69,10 @@ module.exports = {
             { $pull: { friends: params.friendId } },
             { new: true, runValidators: true }
         )
-            .then(friend =>
-                !friend
+            .then(user =>
+                !user
                     ? res.status(404).json({ message: 'User ID does not exist.' })
-                    : res.json(friend))
+                    : res.json(user))
             .catch((error) => res.status(500).json(error));
     }
 };

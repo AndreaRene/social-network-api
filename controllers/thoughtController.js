@@ -82,13 +82,16 @@ module.exports = {
             .catch((error) => res.status(500).json(error));
     },
     // delete reaction
-    deleteReaction({ params }, res) {
+    deleteReaction({ params, body }, res) {
         Thought.findOneAndUpdate(
             { _id: params.thoughtId },
-            { $pull: { reactions: { reactionId: params.reactionId } } },
-            { new: true }
+            { $pull: { reactions: { reactionId: body.reactionId } } },
+            { new: true, runValidators: true }
         )
-            .then((thought) => res.json(thought))
+            .then(thought =>
+                !thought
+                    ? res.status(404).json({ message: 'Thought ID does not exist.' })
+                    : res.json(thought))
             .catch((error) => res.status(500).json(error));
     }
 };
