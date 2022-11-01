@@ -22,3 +22,11 @@ router
     .get(getThoughtById)
     .put(updateThought)
     .delete(deleteThought);
+
+// prep POST and DELETE (add/remove reactions)
+router
+    .route('/:thoughtId/reactions')
+    .post(newReaction)
+    .delete(deleteReaction)
+
+module.exports = router;
